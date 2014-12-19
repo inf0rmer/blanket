@@ -13,10 +13,19 @@ module Blanket
       @uri_parts = []
     end
 
-    def get(id=nil)
-      @uri_parts << id
+    def get(id=nil, options={})
+      if id.is_a? Hash
+        options = id
+        id = nil
+      end
 
-      response = HTTParty.get(uri_from_parts(@base_uri.clone, @uri_parts.clone))
+      if id
+        @uri_parts << id
+      end
+
+      uri = uri_from_parts(@base_uri.clone, @uri_parts.clone)
+
+      response = HTTParty.get(uri, options[:params], options[:headers])
 
       @uri_parts = []
 
