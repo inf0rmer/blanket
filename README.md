@@ -1,6 +1,6 @@
 # Blanket
 
-TODO: Write a gem description
+A dead simple API wrapper.
 
 ## Installation
 
@@ -20,7 +20,25 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+github = blanket("https://api.github.com")
+
+# Get some user's info
+github.users('inf0rmer').get
+# => {
+#  "login": "inf0rmer",
+#  "id": 290137,
+#  ...
+# }
+
+# Get a user's repos
+github.users('inf0rmer').repos().get
+# => {
+#  "id": 20000073,
+#  "name": "BAPersistentOperationQueue",
+#  ...
+# }
+```
 
 ## Contributing
 
