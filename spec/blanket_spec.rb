@@ -13,19 +13,19 @@ describe Blanket do
     it 'GETs a simple resource' do
       api.users.get()
 
-      expect(HTTParty).to have_received(:get).with("http://api.example.org/users/")
+      expect(HTTParty).to have_received(:get).with("http://api.example.org/users")
     end
 
     it 'resets after performing a request' do
       api.users.get()
       api.videos.get()
 
-      expect(HTTParty).to have_received(:get).with("http://api.example.org/videos/")
+      expect(HTTParty).to have_received(:get).with("http://api.example.org/videos")
     end
 
     describe "Response" do
       before :each do
-        allow(HTTParty).to receive(:get) { '{"title": "Something"}' }
+        stub_request(:get, "http://api.example.org/users").to_return(:body => '{"title": "Something"}')
       end
 
       let :response do
@@ -42,13 +42,13 @@ describe Blanket do
         it 'allows identifying a resource' do
           api.users(55).get()
 
-          expect(HTTParty).to have_received(:get).with("http://api.example.org/users/55/")
+          expect(HTTParty).to have_received(:get).with("http://api.example.org/users/55")
         end
 
         it 'only allows one identifier per resource' do
           api.users(55, 37).get()
 
-          expect(HTTParty).not_to have_received(:get).with("http://api.example.org/users/55/37/")
+          expect(HTTParty).not_to have_received(:get).with("http://api.example.org/users/55/37")
         end
       end
 
@@ -56,7 +56,7 @@ describe Blanket do
         it 'allows identifying the last resource' do
           api.users(55).videos.get(15)
 
-          expect(HTTParty).to have_received(:get).with("http://api.example.org/users/55/videos/15/")
+          expect(HTTParty).to have_received(:get).with("http://api.example.org/users/55/videos/15")
         end
       end
     end

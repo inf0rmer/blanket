@@ -12,8 +12,7 @@ module Blanket
 
     def method_missing(method, *args, &block)
       if payload.respond_to? method
-        # Defer to RecursiveOpenStruct
-        payload.send method
+        payload.send method, *args, &block
       else
         super
       end
@@ -31,7 +30,11 @@ module Blanket
 
     def payload_from_json(json)
       if json
-        RecursiveOpenStruct.new json, :recurse_over_arrays => true
+        parsed = [json].flatten.map do |item|
+          RecursiveOpenStruct.new item, :recurse_over_arrays => true
+        end
+
+        (parsed.count == 1) ? parsed.first : parsed
       else
         nil
       end

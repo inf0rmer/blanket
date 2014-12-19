@@ -5,4 +5,5 @@ require 'coveralls'
 Coveralls.wear!
 
 require 'pry'
+require 'webmock/rspec'
 require 'blanket'

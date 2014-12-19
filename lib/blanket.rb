@@ -20,7 +20,7 @@ module Blanket
 
       @uri_parts = []
 
-      Response.new response
+      Response.new (response.respond_to? :body) ? response.body : nil
     end
 
     def respond_to?(method, include_private = false)
@@ -37,7 +37,6 @@ module Blanket
     def uri_from_parts(base_uri, parts)
       parts
         .compact
-        .push(nil)
         .inject(base_uri) { |memo, part| memo << "/#{part}" }
     end
   end

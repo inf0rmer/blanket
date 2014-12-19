@@ -24,20 +24,17 @@ Or install it yourself as:
 github = Blanket.wrap("https://api.github.com")
 
 # Get some user's info
-github.users('inf0rmer').get
-# => {
-#  "login": "inf0rmer",
-#  "id": 290137,
-#  ...
-# }
+user = github.users('inf0rmer').get
+user.login
+# => "inf0rmer"
 
 # Get a user's repos
-github.users('inf0rmer').repos().get
-# => {
+github.users('inf0rmer').repos.get
+# => [{
 #  "id": 20000073,
 #  "name": "BAPersistentOperationQueue",
 #  ...
-# }
+# }]
 ```
 
 ## Contributing
