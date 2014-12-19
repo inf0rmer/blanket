@@ -21,7 +21,7 @@ Or install it yourself as:
 ## Usage
 
 ```ruby
-github = blanket("https://api.github.com")
+github = Blanket.wrap("https://api.github.com")
 
 # Get some user's info
 github.users('inf0rmer').get
