@@ -1,4 +1,5 @@
 require "blanket/version"
+require "blanket/response"
 require 'httparty'
 
 module Blanket
@@ -15,9 +16,11 @@ module Blanket
     def get(id=nil)
       @uri_parts << id
 
-      HTTParty.get uri_from_parts(@base_uri.clone, @uri_parts.clone)
+      response = HTTParty.get(uri_from_parts(@base_uri.clone, @uri_parts.clone))
 
       @uri_parts = []
+
+      Response.new (response.respond_to? :body) ? response.body : nil
     end
 
     def respond_to?(method, include_private = false)
@@ -34,7 +37,6 @@ module Blanket
     def uri_from_parts(base_uri, parts)
       parts
         .compact
-        .push(nil)
         .inject(base_uri) { |memo, part| memo << "/#{part}" }
     end
   end
