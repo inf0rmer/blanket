@@ -8,15 +8,25 @@ module Blanket
   end
 
   class Blanket
+    attr_accessor :headers
+
     def initialize(base_uri)
       @base_uri = base_uri
       @uri_parts = []
+      @headers = {}
     end
 
-    def get(id=nil)
+    def get(id=nil, options={})
+      if id.is_a? Hash
+        options = id
+        id = nil
+      end
+
       @uri_parts << id
 
-      response = HTTParty.get(uri_from_parts(@base_uri.clone, @uri_parts.clone))
+      headers = merged_headers(options[:headers])
+
+      response = HTTParty.get(uri_from_parts, options[:params], headers)
 
       @uri_parts = []
 
@@ -34,10 +44,14 @@ module Blanket
 
     private
 
-    def uri_from_parts(base_uri, parts)
-      parts
+    def merged_headers(headers)
+      headers = @headers.merge(headers != nil ? headers : {})
+    end
+
+    def uri_from_parts
+      @uri_parts.clone
         .compact
-        .inject(base_uri) { |memo, part| memo << "/#{part}" }
+        .inject(@base_uri.clone) { |memo, part| memo << "/#{part}" }
     end
   end
 end
