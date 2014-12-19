@@ -12,8 +12,11 @@ module Blanket
       @uri_parts = []
     end
 
-    def get
+    def get(id=nil)
+      @uri_parts << id
+
       HTTParty.get uri_from_parts(@base_uri.clone, @uri_parts.clone)
+
       @uri_parts = []
     end
 
@@ -22,16 +25,17 @@ module Blanket
     end
 
     def method_missing(method, *args, &block)
-      @uri_parts << method
+      @uri_parts << method << args.first
       self
     end
 
     private
 
     def uri_from_parts(base_uri, parts)
-      parts.inject(base_uri) do |memo, part|
-        memo << "/#{part}"
-      end
+      parts
+        .compact
+        .push(nil)
+        .inject(base_uri) { |memo, part| memo << "/#{part}" }
     end
   end
 end
