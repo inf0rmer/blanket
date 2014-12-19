@@ -6,6 +6,7 @@ module Blanket
     attr_reader :payload
 
     def initialize(json_string)
+      json_string ||= "{}"
       @payload = payload_from_json(JSON.parse(json_string))
     end
 

@@ -23,6 +23,20 @@ describe Blanket do
       expect(HTTParty).to have_received(:get).with("http://api.example.org/videos/")
     end
 
+    describe "Response" do
+      before :each do
+        allow(HTTParty).to receive(:get) { '{"title": "Something"}' }
+      end
+
+      let :response do
+        api.users.get()
+      end
+
+      it "returns a Blanket::Response instance" do
+        expect(response).to be_kind_of(Blanket::Response)
+      end
+    end
+
     describe 'Resource identification' do
       context 'When using a resource method' do
         it 'allows identifying a resource' do
