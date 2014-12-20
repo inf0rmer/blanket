@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'blanket/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "blanket"
+  spec.name          = "blanket_wrapper"
   spec.version       = Blanket::VERSION
   spec.authors       = ["Bruno Abrantes"]
   spec.email         = ["bruno@brunoabrantes.com"]
