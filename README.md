@@ -1,4 +1,8 @@
 # Blanket
+[![Build Status](https://travis-ci.org/inf0rmer/blanket.svg?branch=master)](https://travis-ci.org/inf0rmer/blanket)
+[![Coverage Status](https://img.shields.io/coveralls/inf0rmer/blanket.svg)](https://coveralls.io/r/inf0rmer/blanket?branch=master)
+[![Code Climate](https://codeclimate.com/github/inf0rmer/blanket/badges/gpa.svg)](https://codeclimate.com/github/inf0rmer/blanket)
+
 
 A dead simple API wrapper.
 
