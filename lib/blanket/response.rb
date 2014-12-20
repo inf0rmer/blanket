@@ -18,14 +18,6 @@ module Blanket
       end
     end
 
-    def respond_to?(method, include_private = false)
-      if payload.respond_to? method
-        true
-      else
-        super
-      end
-    end
-
     private
 
     def payload_from_json(json)
