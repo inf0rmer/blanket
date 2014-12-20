@@ -36,7 +36,13 @@ module Blanket
         headers: headers
       }.reject { |k, v| v.nil? || v.empty? })
 
-      Response.new (response.respond_to? :body) ? response.body : nil
+      body = (response.respond_to? :body) ? response.body : nil
+
+      if body.is_a? Array
+        body.map { |item| Response.new item }
+      else
+        Response.new body
+      end
     end
 
     def method_missing(method, *args, &block)
