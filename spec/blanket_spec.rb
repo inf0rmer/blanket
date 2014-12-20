@@ -1,19 +1,13 @@
 require 'spec_helper'
 
 describe Blanket do
-  describe '#get' do
-    let :api do
-      Blanket::wrap("http://api.example.org")
-    end
+  let :api do
+    Blanket::wrap("http://api.example.org")
+  end
 
+  describe 'Making Requests' do
     before :each do
       allow(HTTParty).to receive(:get)
-    end
-
-    it 'GETs a simple resource' do
-      api.users.get()
-
-      expect(HTTParty).to have_received(:get).with("http://api.example.org/users", anything())
     end
 
     it 'resets after performing a request' do
@@ -99,6 +93,66 @@ describe Blanket do
 
         expect(HTTParty).to have_received(:get).with('http://api.example.org/users/55.xml', anything())
       end
+    end
+  end
+
+  describe '#get' do
+    before :each do
+      allow(HTTParty).to receive(:get)
+    end
+
+    it 'GETs a resource' do
+      api.users.get()
+
+      expect(HTTParty).to have_received(:get).with("http://api.example.org/users", anything())
+    end
+  end
+
+  describe '#post' do
+    before :each do
+      allow(HTTParty).to receive(:post)
+    end
+
+    it 'POSTs a resource' do
+      api.users.post()
+
+      expect(HTTParty).to have_received(:post).with("http://api.example.org/users", anything())
+    end
+  end
+
+  describe '#put' do
+    before :each do
+      allow(HTTParty).to receive(:put)
+    end
+
+    it 'PUTs a resource' do
+      api.users.put()
+
+      expect(HTTParty).to have_received(:put).with("http://api.example.org/users", anything())
+    end
+  end
+
+  describe '#patch' do
+    before :each do
+      allow(HTTParty).to receive(:patch)
+    end
+
+    it 'PATCHes a resource' do
+      api.users.patch()
+
+      expect(HTTParty).to have_received(:patch).with("http://api.example.org/users", anything())
+    end
+  end
+
+  describe '#delete' do
+    before :each do
+      allow(HTTParty).to receive(:delete)
+    end
+
+    it 'DELETEs a resource' do
+      api.users.delete()
+
+      expect(HTTParty).to have_received(:delete).with("http://api.example.org/users", anything())
     end
   end
 end
