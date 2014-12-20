@@ -39,10 +39,6 @@ module Blanket
       Response.new (response.respond_to? :body) ? response.body : nil
     end
 
-    def respond_to?(method, include_private = false)
-      true
-    end
-
     def method_missing(method, *args, &block)
       Blanket.new uri_from_parts([method, args.first]), {
         headers: @headers,
