@@ -18,7 +18,23 @@ module Blanket
       @extension = options[:extension]
     end
 
-    def get(id=nil, options={})
+    # RESTful actions
+    [:get, :post, :put, :patch, :delete].each do |action|
+      define_method(action) do |id=nil, options={}|
+        request(action, id, options)
+      end
+    end
+
+    def method_missing(method, *args, &block)
+      Blanket.new uri_from_parts([method, args.first]), {
+        headers: @headers,
+        extension: @extension
+      }
+    end
+
+    private
+
+    def request(method, id=nil, options={})
       if id.is_a? Hash
         options = id
         id = nil
@@ -31,28 +47,15 @@ module Blanket
         uri = "#{uri}.#{extension}"
       end
 
-      response = HTTParty.get(uri, {
+      response = HTTParty.send(method, uri, {
         query:   options[:params],
         headers: headers
       }.reject { |k, v| v.nil? || v.empty? })
 
       body = (response.respond_to? :body) ? response.body : nil
 
-      if body.is_a? Array
-        body.map { |item| Response.new item }
-      else
-        Response.new body
-      end
+      (body.is_a? Array) ? body.map(Response.new) : Response.new(body)
     end
-
-    def method_missing(method, *args, &block)
-      Blanket.new uri_from_parts([method, args.first]), {
-        headers: @headers,
-        extension: @extension
-      }
-    end
-
-    private
 
     def merged_headers(headers)
       headers = @headers.merge(headers != nil ? headers : {})
