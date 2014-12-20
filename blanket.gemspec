@@ -8,9 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Blanket::VERSION
   spec.authors       = ["Bruno Abrantes"]
   spec.email         = ["bruno@brunoabrantes.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
+  spec.summary       = %q{A dead simple API wrapper. Access your data with style.}
+  spec.homepage      = "https://github.com/inf0rmer/blanket"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
