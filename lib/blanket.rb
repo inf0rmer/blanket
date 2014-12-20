@@ -3,17 +3,19 @@ require "blanket/response"
 require 'httparty'
 
 module Blanket
-  def self.wrap(base_uri)
-    Blanket.new base_uri
+  def self.wrap(*args)
+    Blanket.new *args
   end
 
   class Blanket
     attr_accessor :headers
+    attr_accessor :extension
 
-    def initialize(base_uri)
+    def initialize(base_uri, options={})
       @base_uri = base_uri
       @uri_parts = []
-      @headers = {}
+      @headers = (options[:headers].nil?) ? {} : options[:headers]
+      @extension = options[:extension]
     end
 
     def get(id=nil, options={})
@@ -22,13 +24,17 @@ module Blanket
         id = nil
       end
 
-      @uri_parts << id
-
       headers = merged_headers(options[:headers])
+      uri = uri_from_parts([id])
 
-      response = HTTParty.get(uri_from_parts, options[:params], headers)
+      if @extension
+        uri = "#{uri}.#{extension}"
+      end
 
-      @uri_parts = []
+      response = HTTParty.get(uri, {
+        query:   options[:params],
+        headers: headers
+      }.reject { |k, v| v.nil? || v.empty? })
 
       Response.new (response.respond_to? :body) ? response.body : nil
     end
@@ -38,8 +44,10 @@ module Blanket
     end
 
     def method_missing(method, *args, &block)
-      @uri_parts << method << args.first
-      self
+      Blanket.new uri_from_parts([method, args.first]), {
+        headers: @headers,
+        extension: @extension
+      }
     end
 
     private
@@ -48,8 +56,9 @@ module Blanket
       headers = @headers.merge(headers != nil ? headers : {})
     end
 
-    def uri_from_parts
-      @uri_parts.clone
+    def uri_from_parts(parts)
+      parts
+        .clone
         .compact
         .inject(@base_uri.clone) { |memo, part| memo << "/#{part}" }
     end

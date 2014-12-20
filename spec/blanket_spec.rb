@@ -13,14 +13,14 @@ describe Blanket do
     it 'GETs a simple resource' do
       api.users.get()
 
-      expect(HTTParty).to have_received(:get).with("http://api.example.org/users", anything(), anything())
+      expect(HTTParty).to have_received(:get).with("http://api.example.org/users", anything())
     end
 
     it 'resets after performing a request' do
       api.users.get()
       api.videos.get()
 
-      expect(HTTParty).to have_received(:get).with("http://api.example.org/videos", anything(), anything())
+      expect(HTTParty).to have_received(:get).with("http://api.example.org/videos", anything())
     end
 
     describe "Response" do
@@ -42,13 +42,13 @@ describe Blanket do
         it 'allows identifying a resource' do
           api.users(55).get()
 
-          expect(HTTParty).to have_received(:get).with("http://api.example.org/users/55", anything(), anything())
+          expect(HTTParty).to have_received(:get).with("http://api.example.org/users/55", anything())
         end
 
         it 'only allows one identifier per resource' do
           api.users(55, 37).get()
 
-          expect(HTTParty).not_to have_received(:get).with("http://api.example.org/users/55/37", anything(), anything())
+          expect(HTTParty).not_to have_received(:get).with("http://api.example.org/users/55/37", anything())
         end
       end
 
@@ -56,7 +56,7 @@ describe Blanket do
         it 'allows identifying the last resource' do
           api.users(55).videos.get(15)
 
-          expect(HTTParty).to have_received(:get).with("http://api.example.org/users/55/videos/15", anything(), anything())
+          expect(HTTParty).to have_received(:get).with("http://api.example.org/users/55/videos/15", anything())
         end
       end
     end
@@ -65,14 +65,14 @@ describe Blanket do
       it 'allows sending headers in a request' do
         api.users(55).get(headers: {foo: 'bar'})
 
-        expect(HTTParty).to have_received(:get).with('http://api.example.org/users/55', anything(), {foo: 'bar'})
+        expect(HTTParty).to have_received(:get).with('http://api.example.org/users/55', headers: {foo: 'bar'})
       end
 
       it 'allows setting headers globally' do
-        api.headers[:token] = 'my secret token'
+        api = Blanket::wrap("http://api.example.org", headers: {token: 'my secret token'})
         api.users(55).get()
 
-        expect(HTTParty).to have_received(:get).with('http://api.example.org/users/55', anything(), {token: 'my secret token'})
+        expect(HTTParty).to have_received(:get).with('http://api.example.org/users/55', headers: {token: 'my secret token'})
       end
     end
 
@@ -80,7 +80,24 @@ describe Blanket do
       it 'allows sending parameters in a request' do
         api.users(55).get(params: {foo: 'bar'})
 
-        expect(HTTParty).to have_received(:get).with('http://api.example.org/users/55', {foo: 'bar'}, anything())
+        expect(HTTParty).to have_received(:get).with('http://api.example.org/users/55', query: {foo: 'bar'})
+      end
+    end
+
+    describe 'URL Extension' do
+      it 'allows setting an extension for a request', :wip => true do
+        users_endpoint = api.users(55)
+        users_endpoint.extension = :json
+        users_endpoint.get
+
+        expect(HTTParty).to have_received(:get).with('http://api.example.org/users/55.json', anything())
+      end
+
+      it 'allows setting an extension globally' do
+        api = Blanket::wrap("http://api.example.org", extension: :xml)
+        api.users(55).get
+
+        expect(HTTParty).to have_received(:get).with('http://api.example.org/users/55.xml', anything())
       end
     end
   end
