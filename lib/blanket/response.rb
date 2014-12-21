@@ -3,13 +3,20 @@ require 'json'
 
 module Blanket
   class Response
+    # Attribute reader for the original JSON payload string
     attr_reader :payload
 
+    # A Blanket HTTP response wrapper.
+    # @param [String] json_string A string containing data in the JSON format
+    # @return [Blanket::Response] The wrapped Response object
     def initialize(json_string)
       json_string ||= "{}"
       @payload = payload_from_json(JSON.parse(json_string))
     end
 
+    private
+
+    # Allows accessing the payload's JSON keys through methods.
     def method_missing(method, *args, &block)
       if payload.respond_to? method
         payload.send method, *args, &block
@@ -17,8 +24,6 @@ module Blanket
         super
       end
     end
-
-    private
 
     def payload_from_json(json)
       if json

@@ -1,0 +1,7 @@
+--protected
+--no-private
+--hide-tag yard.tag
+--hide-tag yard.directive
+--hide-tag yard.signature
+--main README
+--files LICENSE
