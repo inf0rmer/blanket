@@ -21,7 +21,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install blanket
+    $ gem install blanket_wrapper
 
 ## Usage
 
