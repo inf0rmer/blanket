@@ -135,6 +135,26 @@ users_endpoint = api.users(55)
 users_endpoint.extension = :xml
 ```
 
+### Handling Exceptions
+
+Blanket will raise exceptions for HTTP errors encountered while making requests. Exception subclasses are raised for well known errors (404, 500, etc.) but for other status codes a default `Blanket::Exception` will be raised instead.
+
+```ruby
+begin
+  api.thingamajig.get
+rescue Blanket::ResourceNotFound => e
+  e.code
+  # => 404
+
+  e.message
+  # => "404: Resource Not Found"
+
+  # The HTTP body, ie. the error message sent by the server
+  e.body
+  # => "Could not find this resource!"
+end
+```
+
 ## Contributing
 
 1. Fork it ( https://github.com/[my-github-username]/blanket/fork )

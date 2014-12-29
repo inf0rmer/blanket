@@ -7,11 +7,9 @@ describe "Blanket::Wrapper" do
   end
 
   describe 'Making Requests' do
-    before :each do
-      allow(HTTParty).to receive(:get)
-    end
-
     it 'resets after performing a request' do
+      allow(HTTParty).to receive(:get) { StubbedResponse.new }
+
       api.users.get()
       api.videos.get()
 
@@ -20,11 +18,12 @@ describe "Blanket::Wrapper" do
 
     describe "Response" do
       before :each do
-        stub_request(:get, "http://api.example.org/users").to_return(:body => '{"title": "Something"}')
+        stub_request(:get, "http://api.example.org/users")
+        .to_return(:body => '{"title": "Something"}')
       end
 
       let :response do
-        api.users.get()
+        api.users.get
       end
 
       it "returns a Blanket::Response instance" do
@@ -32,7 +31,27 @@ describe "Blanket::Wrapper" do
       end
     end
 
+    describe "Exceptions" do
+      let :api do
+        Blanket::wrap("http://api.example.org")
+      end
+
+      describe "500" do
+        before :each do
+          stub_request(:get, "http://api.example.org/users").to_return(:status => 500, :body => "You've been met with a terrible fate, haven't you?")
+        end
+
+        it "raises a Blanket::InternalServerError exception" do
+          expect { api.users.get }.to raise_exception(Blanket::InternalServerError)
+        end
+      end
+    end
+
     describe 'Resource identification' do
+      before do
+        allow(HTTParty).to receive(:get) { StubbedResponse.new }
+      end
+
       context 'When using a resource method' do
         it 'allows identifying a resource' do
           api.users(55).get()
@@ -57,6 +76,10 @@ describe "Blanket::Wrapper" do
     end
 
     describe 'Headers' do
+      before :each do
+        allow(HTTParty).to receive(:get) { StubbedResponse.new }
+      end
+
       it 'allows sending headers in a request' do
         api.users(55).get(headers: {foo: 'bar'})
 
@@ -72,6 +95,10 @@ describe "Blanket::Wrapper" do
     end
 
     describe 'Parameters' do
+      before :each do
+        allow(HTTParty).to receive(:get) { StubbedResponse.new }
+      end
+
       it 'allows sending parameters in a request' do
         api.users(55).get(params: {foo: 'bar'})
 
@@ -80,7 +107,11 @@ describe "Blanket::Wrapper" do
     end
 
     describe 'URL Extension' do
-      it 'allows setting an extension for a request', :wip => true do
+      before :each do
+        allow(HTTParty).to receive(:get) { StubbedResponse.new }
+      end
+
+      it 'allows setting an extension for a request' do
         users_endpoint = api.users(55)
         users_endpoint.extension = :json
         users_endpoint.get
@@ -98,8 +129,8 @@ describe "Blanket::Wrapper" do
   end
 
   describe '#get' do
-    before :each do
-      allow(HTTParty).to receive(:get)
+    before do
+      allow(HTTParty).to receive(:get) { StubbedResponse.new }
     end
 
     it 'GETs a resource' do
@@ -110,8 +141,8 @@ describe "Blanket::Wrapper" do
   end
 
   describe '#post' do
-    before :each do
-      allow(HTTParty).to receive(:post)
+    before do
+      allow(HTTParty).to receive(:post) { StubbedResponse.new }
     end
 
     it 'POSTs a resource' do
@@ -122,8 +153,8 @@ describe "Blanket::Wrapper" do
   end
 
   describe '#put' do
-    before :each do
-      allow(HTTParty).to receive(:put)
+    before do
+      allow(HTTParty).to receive(:put) { StubbedResponse.new }
     end
 
     it 'PUTs a resource' do
@@ -134,8 +165,8 @@ describe "Blanket::Wrapper" do
   end
 
   describe '#patch' do
-    before :each do
-      allow(HTTParty).to receive(:patch)
+    before do
+      allow(HTTParty).to receive(:patch) { StubbedResponse.new }
     end
 
     it 'PATCHes a resource' do
@@ -146,8 +177,8 @@ describe "Blanket::Wrapper" do
   end
 
   describe '#delete' do
-    before :each do
-      allow(HTTParty).to receive(:delete)
+    before do
+      allow(HTTParty).to receive(:delete) { StubbedResponse.new }
     end
 
     it 'DELETEs a resource' do

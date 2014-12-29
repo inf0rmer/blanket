@@ -1,4 +1,5 @@
 module Blanket
+  # The Wrapper class wraps an API
   class Wrapper
     class << self
       private
@@ -67,9 +68,12 @@ module Blanket
         headers: headers
       }.reject { |k, v| v.nil? || v.empty? })
 
-      body = (response.respond_to? :body) ? response.body : nil
-
-      (body.is_a? Array) ? body.map(Response.new) : Response.new(body)
+      if response.code <= 400
+        body = (response.respond_to? :body) ? response.body : nil
+        (body.is_a? Array) ? body.map(Response.new) : Response.new(body)
+      else
+        raise Blanket::Exceptions::EXCEPTIONS_MAP[response.code].new(response)
+      end
     end
 
     def merged_headers(headers)
