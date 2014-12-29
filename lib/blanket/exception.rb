@@ -86,6 +86,19 @@ module Blanket
       @message || self.class.name
     end
 
+    def inspect
+      "#{message}: #{body}"
+    end
+
+    def to_s
+      inspect
+    end
+  end
+
+  # We will a create an exception for each status code, see http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+  module Exceptions
+    # Map http status codes to the corresponding exception class
+    EXCEPTIONS_MAP = {}
   end
 
   STATUSES.each_pair do |code, message|
@@ -93,6 +106,7 @@ module Blanket
       send(:define_method, :message) {"#{code ? "#{code} " : ''}#{message}"}
     end
 
-    const_set message.delete(' \-\''), klass
+    klass_constant = const_set message.delete(' \-\''), klass
+    Exceptions::EXCEPTIONS_MAP[code] = klass_constant
   end
 end
