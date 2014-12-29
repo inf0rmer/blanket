@@ -1,5 +1,6 @@
 module Blanket
 
+  # A Map of HTTP status codes and their names
   STATUSES = {100 => 'Continue',
               101 => 'Switching Protocols',
               102 => 'Processing', #WebDAV
@@ -66,30 +67,41 @@ module Blanket
               511 => 'Network Authentication Required', # RFC6585
   }
 
+  # The base class for all Blanket Exceptions
   class Exception < RuntimeError
+    # Attribute writer for the Exception message
     attr_writer :message
+    # Attribute reader for the Exception http response
     attr_reader :response
 
+    # Creates a new exception
+    # @param [HTTParty::Response] response the HTTP Response
+    # @return [Blanket::Exception] The Blanket Exception object
     def initialize(response = nil)
       @response = response
     end
 
+    # Returns the HTTP response body
     def body
       @response.body.to_s if @response
     end
 
+    # Returns the HTTP status code
     def code
       @response.code.to_i if @response
     end
 
+    # Returns a formatted error message
     def message
       @message || self.class.name
     end
 
+    # Returns a stringified error message
     def inspect
       "#{message}: #{body}"
     end
 
+    # Returns a stringified error message
     def to_s
       inspect
     end

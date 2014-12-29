@@ -1,4 +1,5 @@
 module Blanket
+  # The Wrapper class wraps an API
   class Wrapper
     class << self
       private

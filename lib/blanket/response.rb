@@ -2,6 +2,8 @@ require 'recursive-open-struct'
 require 'json'
 
 module Blanket
+
+  # The Response class wraps HTTP responses
   class Response
     # Attribute reader for the original JSON payload string
     attr_reader :payload
