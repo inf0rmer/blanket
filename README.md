@@ -12,7 +12,7 @@ A dead simple API wrapper.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'blanket'
+gem 'blanket_wrapper'
 ```
 
 And then execute:
