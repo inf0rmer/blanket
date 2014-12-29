@@ -7,6 +7,19 @@
 
 A dead simple API wrapper.
 
+**Table of Contents**
+
+- [Installation](#installation)
+- [Usage](#usage)
+	- [Quick demo](#quick-demo)
+	- [How it works](#how-it-works)
+	- [Responses](#responses)
+	- [Request Parameters](#request-parameters)
+	- [Headers](#headers)
+	- [Extensions](#extensions)
+	- [Handling Exceptions](#handling-exceptions)
+- [Contributing](#contributing)
+
 ## Installation
 
 Add this line to your application's Gemfile:
