@@ -1,28 +1,7 @@
 module Blanket
 
-  # A Map of HTTP status codes and their names
-  STATUSES = {100 => 'Continue',
-              101 => 'Switching Protocols',
-              102 => 'Processing', #WebDAV
-
-              200 => 'OK',
-              201 => 'Created',
-              202 => 'Accepted',
-              203 => 'Non-Authoritative Information', # http/1.1
-              204 => 'No Content',
-              205 => 'Reset Content',
-              206 => 'Partial Content',
-              207 => 'Multi-Status', #WebDAV
-
-              300 => 'Multiple Choices',
-              301 => 'Moved Permanently',
-              302 => 'Found',
-              303 => 'See Other', # http/1.1
-              304 => 'Not Modified',
-              305 => 'Use Proxy', # http/1.1
-              306 => 'Switch Proxy', # no longer used
-              307 => 'Temporary Redirect', # http/1.1
-
+  # A Map of "error" HTTP status codes and their names
+  STATUSES = {
               400 => 'Bad Request',
               401 => 'Unauthorized',
               402 => 'Payment Required',
