@@ -37,7 +37,7 @@ module Blanket
     def initialize(base_uri, options={})
       @base_uri = base_uri
       @uri_parts = []
-      @headers = (options[:headers].nil?) ? {} : options[:headers]
+      @headers = options[:headers] || {}
       @extension = options[:extension]
     end
 
@@ -77,14 +77,11 @@ module Blanket
     end
 
     def merged_headers(headers)
-      headers = @headers.merge(headers != nil ? headers : {})
+      @headers.merge(headers || {})
     end
 
     def uri_from_parts(parts)
-      parts
-        .clone
-        .compact
-        .inject(@base_uri.clone) { |memo, part| memo << "/#{part}" }
+      ([@base_uri] + parts).compact.join('/')
     end
   end
 end
