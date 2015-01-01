@@ -30,13 +30,12 @@ module Blanket
     def payload_from_json(json)
       if json
         parsed = [json].flatten.map do |item|
-          RecursiveOpenStruct.new item, :recurse_over_arrays => true
+          RecursiveOpenStruct.new item, recurse_over_arrays: true
         end
 
         (parsed.count == 1) ? parsed.first : parsed
-      else
-        nil
       end
     end
+
   end
 end
