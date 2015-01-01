@@ -21,7 +21,7 @@ module Blanket
     # Allows accessing the payload's JSON keys through methods.
     def method_missing(method, *args, &block)
       if payload.respond_to? method
-        payload.send method, *args, &block
+        payload.public_send method, *args, &block
       else
         super
       end
