@@ -45,6 +45,16 @@ describe "Blanket::Wrapper" do
           expect { api.users.get }.to raise_exception(Blanket::InternalServerError)
         end
       end
+
+      describe "522, a non registered invalid status code" do
+        before :each do
+          stub_request(:get, "http://api.example.org/users").to_return(status: 522, body: "You've been met with a terrible fate, haven't you?")
+        end
+
+        it "raises a generic instance of Blanket::Exception" do
+          expect { api.users.get }.to raise_exception(Blanket::Exception)
+        end
+      end
     end
 
     describe 'Resource identification' do

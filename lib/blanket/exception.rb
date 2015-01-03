@@ -80,16 +80,17 @@ module Blanket
       "#{message}: #{body}"
     end
 
-    # Returns a stringified error message
-    def to_s
-      inspect
-    end
+    alias_method :to_s, :inspect
   end
 
   # We will a create an exception for each status code, see http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
   module Exceptions
     # Map http status codes to the corresponding exception class
     EXCEPTIONS_MAP = {}
+
+    def self.generate_from_response(response)
+      (EXCEPTIONS_MAP[response.code] || Exception).new(response)
+    end
   end
 
   STATUSES.each_pair do |code, message|
