@@ -21,22 +21,19 @@ module Blanket
     # Allows accessing the payload's JSON keys through methods.
     def method_missing(method, *args, &block)
       if payload.respond_to? method
-        payload.send method, *args, &block
+        payload.public_send method, *args, &block
       else
         super
       end
     end
 
     def payload_from_json(json)
-      if json
-        parsed = [json].flatten.map do |item|
-          RecursiveOpenStruct.new item, :recurse_over_arrays => true
-        end
-
-        (parsed.count == 1) ? parsed.first : parsed
-      else
-        nil
+      parsed = [json].flatten.map do |item|
+        RecursiveOpenStruct.new item, recurse_over_arrays: true
       end
+
+      (parsed.count == 1) ? parsed.first : parsed
     end
+
   end
 end

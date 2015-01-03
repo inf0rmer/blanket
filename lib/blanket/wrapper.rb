@@ -63,10 +63,10 @@ module Blanket
         uri = "#{uri}.#{extension}"
       end
 
-      response = HTTParty.send(method, uri, {
+      response = HTTParty.public_send(method, uri, {
         query:   options[:params],
         headers: headers
-      }.reject { |k, v| v.nil? || v.empty? })
+      }.reject { |_, value| value.nil? || value.empty? })
 
       if response.code <= 400
         body = (response.respond_to? :body) ? response.body : nil

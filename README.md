@@ -41,6 +41,8 @@ Or install it yourself as:
 ### Quick demo
 
 ```ruby
+require 'blanket'
+
 github = Blanket.wrap("https://api.github.com")
 
 # Get some user's info

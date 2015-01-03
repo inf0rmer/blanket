@@ -94,7 +94,9 @@ module Blanket
 
   STATUSES.each_pair do |code, message|
     klass = Class.new(Exception) do
-      send(:define_method, :message) {"#{code ? "#{code} " : ''}#{message}"}
+      define_method :message do
+        "#{code} #{message}"
+      end
     end
 
     klass_constant = const_set message.delete(' \-\''), klass
