@@ -87,6 +87,10 @@ module Blanket
   module Exceptions
     # Map http status codes to the corresponding exception class
     EXCEPTIONS_MAP = {}
+
+    def self.generate_from_response(response)
+      (EXCEPTIONS_MAP[response.code] || Exception).new(response)
+    end
   end
 
   STATUSES.each_pair do |code, message|

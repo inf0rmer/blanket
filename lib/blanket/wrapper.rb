@@ -72,7 +72,7 @@ module Blanket
         body = (response.respond_to? :body) ? response.body : nil
         (body.is_a? Array) ? body.map(Response.new) : Response.new(body)
       else
-        raise Blanket::Exceptions::EXCEPTIONS_MAP[response.code].new(response)
+        raise Blanket::Exceptions.generate_from_response(response)
       end
     end
 
