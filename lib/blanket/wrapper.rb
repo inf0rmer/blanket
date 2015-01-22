@@ -21,7 +21,7 @@ module Blanket
 
     # Attribute accessor for  params that
     # should be applied to all requests
-    attr_accessor :default_params
+    attr_accessor :params
 
     # Attribute accessor for file extension that
     # should be appended to all requests
@@ -35,13 +35,13 @@ module Blanket
 
     # Wraps the base URL for an API
     # @param [String, Symbol] base_uri The root URL of the API you wish to wrap.
-    # @param [Hash] options An options hash with global values for :headers, :extension and :default_params
+    # @param [Hash] options An options hash with global values for :headers, :extension and :params
     # @return [Blanket] The Blanket object wrapping the API
     def initialize(base_uri, options={})
       @base_uri = base_uri
       @uri_parts = []
       @headers = options[:headers] || {}
-      @default_params = options[:default_params] || {}
+      @params = options[:params] || {}
       @extension = options[:extension]
     end
 
@@ -51,7 +51,7 @@ module Blanket
       Wrapper.new uri_from_parts([method, args.first]), {
         headers: @headers,
         extension: @extension,
-        default_params: @default_params
+        params: @params
       }
     end
 
@@ -88,7 +88,7 @@ module Blanket
     end
 
     def merged_params(params)
-      default_params.merge(params || {})
+      @params.merge(params || {})
     end
 
     def uri_from_parts(parts)
