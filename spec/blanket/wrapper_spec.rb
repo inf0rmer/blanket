@@ -114,6 +114,13 @@ describe "Blanket::Wrapper" do
 
         expect(HTTParty).to have_received(:get).with('http://api.example.org/users/55', query: {foo: 'bar'})
       end
+
+      it 'allows setting parameters globally' do
+        api = Blanket::wrap("http://api.example.org", default_params: {token: 'my secret token'})
+        api.users(55).get(params: {foo: 'bar'})
+
+        expect(HTTParty).to have_received(:get).with('http://api.example.org/users/55', query: {token: 'my secret token', foo: 'bar'})
+      end
     end
 
     describe 'URL Extension' do
@@ -134,19 +141,6 @@ describe "Blanket::Wrapper" do
         api.users(55).get
 
         expect(HTTParty).to have_received(:get).with('http://api.example.org/users/55.xml', anything())
-      end
-    end
-
-    describe 'Body' do
-      before :each do
-        allow(HTTParty).to receive(:post) { StubbedResponse.new }
-      end
-
-      it 'allows setting the body for a request' do
-        api = Blanket::wrap("http://api.example.org")
-        api.users(55).post(body: { this_key: :this_value }.to_json)
-
-        expect(HTTParty).to have_received(:post).with('http://api.example.org/users/55', body: { this_key: :this_value }.to_json)
       end
     end
   end
