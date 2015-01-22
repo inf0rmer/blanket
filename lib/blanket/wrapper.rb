@@ -7,7 +7,7 @@ module Blanket
       #   @method $1()
       #   Performs a $1 request on the wrapped URL
       #   @param [String, Symbol, Numeric] id The resource identifier to attach to the last part of the request
-      #   @param [Hash] options An options hash with values for :headers, :extension and :params
+      #   @param [Hash] options An options hash with values for :headers, :extension, :params and :body
       #   @return [Blanket::Response, Array] A wrapped Blanket::Response or an Array
       def add_action(action)
         define_method(action) do |id=nil, options={}|
@@ -65,7 +65,8 @@ module Blanket
 
       response = HTTParty.public_send(method, uri, {
         query:   options[:params],
-        headers: headers
+        headers: headers,
+        body:    options[:body]
       }.reject { |_, value| value.nil? || value.empty? })
 
       if response.code <= 400
