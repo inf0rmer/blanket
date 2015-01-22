@@ -119,6 +119,14 @@ repos.map(&:name)
 # => ["analytics-ios", "aztec", "fusebox", ...]
 ```
 
+### Request Body
+You can make requests with body using the `body` option:
+
+´´´ruby
+api = Blanket::wrap("http://api.example.org")
+api.messages.post(body: 'Hello')
+```
+
 ### Request Parameters
 Blanket supports appending parameters to your requests:
 
