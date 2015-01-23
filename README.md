@@ -135,6 +135,12 @@ api.users(55).get(params: {foo: 'bar'})
 # => "http://api.example.org/users/55?foo=bar"
 ```
 
+You can also set default params for all your requests on initialization:
+
+```ruby
+api = Blanket::wrap("http://api.example.org", params: {access_token: 'my secret token'})
+```
+
 ### Headers
 HTTP Headers are always useful when accessing an API, so Blanket makes it easy for you to specify them, either globally or on a per-request basis:
 

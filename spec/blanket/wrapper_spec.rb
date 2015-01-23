@@ -114,6 +114,13 @@ describe "Blanket::Wrapper" do
 
         expect(HTTParty).to have_received(:get).with('http://api.example.org/users/55', query: {foo: 'bar'})
       end
+
+      it 'allows setting parameters globally' do
+        api = Blanket::wrap("http://api.example.org", params: {token: 'my secret token'})
+        api.users(55).get(params: {foo: 'bar'})
+
+        expect(HTTParty).to have_received(:get).with('http://api.example.org/users/55', query: {token: 'my secret token', foo: 'bar'})
+      end
     end
 
     describe 'URL Extension' do

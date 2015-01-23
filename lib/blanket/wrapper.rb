@@ -1,5 +1,4 @@
 module Blanket
-  # The Wrapper class wraps an API
   class Wrapper
     class << self
       private
@@ -20,6 +19,10 @@ module Blanket
     # should be applied to all requests
     attr_accessor :headers
 
+    # Attribute accessor for  params that
+    # should be applied to all requests
+    attr_accessor :params
+
     # Attribute accessor for file extension that
     # should be appended to all requests
     attr_accessor :extension
@@ -32,12 +35,13 @@ module Blanket
 
     # Wraps the base URL for an API
     # @param [String, Symbol] base_uri The root URL of the API you wish to wrap.
-    # @param [Hash] options An options hash with global values for :headers and :extension
+    # @param [Hash] options An options hash with global values for :headers, :extension and :params
     # @return [Blanket] The Blanket object wrapping the API
     def initialize(base_uri, options={})
       @base_uri = base_uri
       @uri_parts = []
       @headers = options[:headers] || {}
+      @params = options[:params] || {}
       @extension = options[:extension]
     end
 
@@ -46,7 +50,8 @@ module Blanket
     def method_missing(method, *args, &block)
       Wrapper.new uri_from_parts([method, args.first]), {
         headers: @headers,
-        extension: @extension
+        extension: @extension,
+        params: @params
       }
     end
 
@@ -57,6 +62,7 @@ module Blanket
       end
 
       headers = merged_headers(options[:headers])
+      params = merged_params(options[:params])
       uri = uri_from_parts([id])
 
       if @extension
@@ -64,7 +70,7 @@ module Blanket
       end
 
       response = HTTParty.public_send(method, uri, {
-        query:   options[:params],
+        query:   params,
         headers: headers,
         body:    options[:body]
       }.reject { |_, value| value.nil? || value.empty? })
@@ -79,6 +85,10 @@ module Blanket
 
     def merged_headers(headers)
       @headers.merge(headers || {})
+    end
+
+    def merged_params(params)
+      @params.merge(params || {})
     end
 
     def uri_from_parts(parts)
