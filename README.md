@@ -122,7 +122,7 @@ repos.map(&:name)
 ### Request Body
 You can make requests with body using the `body` option:
 
-´´´ruby
+```ruby
 api = Blanket::wrap("http://api.example.org")
 api.messages.post(body: 'Hello')
 ```
