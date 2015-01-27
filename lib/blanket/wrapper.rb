@@ -92,7 +92,7 @@ module Blanket
     end
 
     def uri_from_parts(parts)
-      ([@base_uri] + parts).compact.join('/')
+      File.join @base_uri, *parts.compact.map(&:to_s)
     end
   end
 end
