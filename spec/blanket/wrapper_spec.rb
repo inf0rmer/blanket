@@ -16,6 +16,14 @@ describe "Blanket::Wrapper" do
       expect(HTTParty).to have_received(:get).with("http://api.example.org/videos", anything())
     end
 
+    it 'allows full paths for uri construction' do
+      allow(HTTParty).to receive(:get) { StubbedResponse.new }
+
+      api.get('flexible/path')
+
+      expect(HTTParty).to have_received(:get).with("http://api.example.org/flexible/path", anything())
+    end
+
     describe "Response" do
       before :each do
         stub_request(:get, "http://api.example.org/users")
