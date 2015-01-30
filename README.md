@@ -92,25 +92,7 @@ github.users.get('inf0rmer')
 ```
 
 ### Responses
-At the moment Blanket only accepts JSON responses. Every request returns a `Blanket::Response` instance, which parses the JSON internally and lets you access keys using dot syntax:
-
-```ruby
-user = github.users('inf0rmer').get
-
-user.login
-# => "inf0rmer"
-
-user.url
-# => "https://api.github.com/users/inf0rmer"
-
-# It even works on nested keys
-repo = github.repos('inf0rmer').get('blanket')
-
-repo.owner.login
-# => "inf0rmer"
-```
-
-If the response is an array, all `Enumerable` methods work as expected:
+At the moment Blanket only accepts JSON responses. Every request returns an array of `Blanket::Response`.
 
 ```ruby
 repos = github.users('inf0rmer').repos.get
