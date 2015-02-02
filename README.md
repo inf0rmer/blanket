@@ -85,6 +85,13 @@ github.users('inf0rmer').repos
 
 The final `get` method performs a GET HTTP request. You can also use it to append a final part to your request, so you can write something like:
 
+As this magic works using `method_missingp`, you can `send` slashed uri parts to the wrapper and it will play nicely. This is especially usefull when APIs give you URLs:
+```ruby
+github.get('users/inf0rmer/repos')
+# or, if you don't wnat to perform the request yet, or have to append more parts to the uri
+github.send('users/inf0rmer').repos#.get
+```
+
 ```ruby
 github = Blanket.wrap("https://api.github.com")
 github.users.get('inf0rmer')
