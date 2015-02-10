@@ -71,7 +71,7 @@ module Blanket
 
       response = HTTParty.public_send(method, uri, {
         query:   params,
-        headers: headers,
+        headers: stringify_keys(headers),
         body:    options[:body]
       }.reject { |_, value| value.nil? || value.empty? })
 
@@ -93,6 +93,10 @@ module Blanket
 
     def uri_from_parts(parts)
       File.join @base_uri, *parts.compact.map(&:to_s)
+    end
+
+    def stringify_keys(hash)
+      hash.inject({}) {|memo,(k,v)| memo[k.to_s] = v; memo}
     end
   end
 end
