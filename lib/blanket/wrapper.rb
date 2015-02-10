@@ -1,3 +1,5 @@
+require_relative "utils"
+
 module Blanket
   class Wrapper
     class << self
@@ -61,7 +63,7 @@ module Blanket
         id = nil
       end
 
-      headers = merged_headers(options[:headers])
+      headers = Blanket.stringify_keys merged_headers(options[:headers])
       params = merged_params(options[:params])
       uri = uri_from_parts([id])
 
