@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'blanket/response'
 
-describe "Blanket::Response" do
+describe Blanket::Response do
   describe "Dynamic attribute accessors" do
     context "With single objects" do
       let :payload do
@@ -23,6 +23,10 @@ describe "Blanket::Response" do
 
       let :response do
         Blanket::Response.new(payload)
+      end
+
+      it "can access the payload json" do
+        expect(response.payload_json).to eq payload
       end
 
       it "can access a surface property from a json string as a method" do
