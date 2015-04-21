@@ -44,6 +44,16 @@ describe "Blanket::Wrapper" do
         Blanket::wrap("http://api.example.org")
       end
 
+      describe "400" do
+        before :each do
+          stub_request(:get, "http://api.example.org/users").to_return(:status => 400, :body => "You've been met with a terrible fate, haven't you?")
+        end
+
+        it "raises a Blanket::BadRequestError exception" do
+          expect { api.users.get }.to raise_exception(Blanket::BadRequest)
+        end
+      end
+
       describe "500" do
         before :each do
           stub_request(:get, "http://api.example.org/users").to_return(:status => 500, :body => "You've been met with a terrible fate, haven't you?")

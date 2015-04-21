@@ -77,7 +77,7 @@ module Blanket
         body:    options[:body]
       }.reject { |_, value| value.nil? || value.empty? })
 
-      if response.code <= 400
+      if response.code < 400
         body = (response.respond_to? :body) ? response.body : nil
         (body.is_a? Array) ? body.map(Response.new) : Response.new(body)
       else
