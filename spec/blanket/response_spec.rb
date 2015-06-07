@@ -4,8 +4,25 @@ require 'blanket/response'
 describe "Blanket::Response" do
   describe "Dynamic attribute accessors" do
     context "With single objects" do
+      let :payload do
+        {
+          title: "Something",
+          desc: {
+            someKey: "someValue",
+            anotherKey:"value"
+          },
+          main_item: {
+            values:[
+              { quantity: 1 },
+              { quantity: 2 },
+              { quantity: 3 }
+            ]
+          }
+        }.to_json
+      end
+
       let :response do
-        Blanket::Response.new('{"title": "Something", "desc":{"someKey":"someValue","anotherKey":"value"},"main_item":{"values":[{"quantity": 1}, {"quantity": 2}, {"quantity": 3}]}}')
+        Blanket::Response.new(payload)
       end
 
       it "can access a surface property from a json string as a method" do
@@ -22,8 +39,12 @@ describe "Blanket::Response" do
     end
 
     context "With an array of objects" do
+      let(:title1)  { "Something" }
+      let(:title2)  { "Something else" }
+      let(:payload) { [{ title: title1 }, { title: title2 }].to_json }
+
       let :response do
-        Blanket::Response.new('[{"title": "Something"}, {"title": "Something else"}]')
+        Blanket::Response.new(payload)
       end
 
       let :titles do
@@ -31,7 +52,18 @@ describe "Blanket::Response" do
       end
 
       it "can access methods from each item" do
-        expect(titles).to match_array(["Something", "Something else"])
+        expect(titles).to match_array([title1, title2])
+      end
+
+      context "With an array containing a single object" do
+        let(:payload) { [{ title: title1 }].to_json }
+        let :response do
+          Blanket::Response.new(payload)
+        end
+
+        it "keeps the payload as an array" do
+          expect(response.first).to be
+        end
       end
     end
   end
