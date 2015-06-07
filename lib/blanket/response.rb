@@ -32,7 +32,7 @@ module Blanket
         RecursiveOpenStruct.new item, recurse_over_arrays: true
       end
 
-      (parsed.count == 1) ? parsed.first : parsed
+      (json.is_a? Array) ? parsed : parsed.first
     end
 
   end
