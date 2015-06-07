@@ -1,4 +1,4 @@
 module Blanket
   # Current gem version
-  VERSION = "3.0.1"
+  VERSION = "3.0.2"
 end
