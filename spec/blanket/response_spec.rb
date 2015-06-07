@@ -62,7 +62,7 @@ describe "Blanket::Response" do
         end
 
         it "keeps the payload as an array" do
-          expect(response.first.title).to eq(title1)
+          expect(response.first).to be
         end
       end
     end
