@@ -63,10 +63,12 @@ module Blanket
 
     method_overrides.each do |method_name|
       define_method(method_name) do |argument|
-        Wrapper.new uri_from_parts([:method_name, argument]),
+        Wrapper.new(
+          uri_from_parts([:method_name, argument]),
           headers: @headers,
           extension: @extension,
           params: @params
+        )
       end
     end
 

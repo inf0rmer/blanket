@@ -30,7 +30,7 @@ describe "Blanket::Wrapper" do
       api.get("flexible/send")
 
       expect(HTTParty).to have_received(:get).
-        with("http://api.example.org/flexible/send", anything())
+        with("http://api.example.org/flexible/send", anything)
     end
 
     describe "Response" do
