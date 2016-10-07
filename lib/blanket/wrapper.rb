@@ -15,6 +15,10 @@ module Blanket
           request(action, id, options)
         end
       end
+
+      def method_overrides
+        [:send]
+      end
     end
 
     # Attribute accessor for HTTP Headers that
@@ -55,6 +59,17 @@ module Blanket
         extension: @extension,
         params: @params
       }
+    end
+
+    method_overrides.each do |method_name|
+      define_method(method_name) do |argument|
+        Wrapper.new(
+          uri_from_parts([:method_name, argument]),
+          headers: @headers,
+          extension: @extension,
+          params: @params
+        )
+      end
     end
 
     def request(method, id=nil, options={})

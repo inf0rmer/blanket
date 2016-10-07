@@ -24,6 +24,15 @@ describe "Blanket::Wrapper" do
       expect(HTTParty).to have_received(:get).with("http://api.example.org/flexible/path", anything())
     end
 
+    it "allows Kernel methods to be used" do
+      allow(HTTParty).to receive(:get) { StubbedResponse.new }
+
+      api.get("flexible/send")
+
+      expect(HTTParty).to have_received(:get).
+        with("http://api.example.org/flexible/send", anything)
+    end
+
     describe "Response" do
       before :each do
         stub_request(:get, "http://api.example.org/users")
