@@ -1,20 +1,16 @@
-require 'recursive-open-struct'
 require 'json'
 module Blanket
 
   # The Response class wraps HTTP responses
   class Response
     # Attribute reader for the original JSON payload string and JSON payload
-    attr_reader :payload, :payload_json
+    attr_reader :payload_json
 
     # A Blanket HTTP response wrapper.
     # @param [String] json_string A string containing data in the JSON format
     # @return [Blanket::Response] The wrapped Response object
     def initialize(json_string)
-      json_string ||= "{}"
-      json = JSON.parse(json_string)
-      @payload = payload_from_json(json)
-      @payload_json = json.to_json
+      @payload_json = json_string || "{}"
     end
 
     private
@@ -28,13 +24,8 @@ module Blanket
       end
     end
 
-    def payload_from_json(json)
-      parsed = [json].flatten.map do |item|
-        RecursiveOpenStruct.new item, recurse_over_arrays: true
-      end
-
-      (json.is_a? Array) ? parsed : parsed.first
+    def payload
+      @payload ||= JSON.parse(payload_json, object_class: OpenStruct)
     end
-
   end
 end
