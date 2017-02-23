@@ -159,6 +159,18 @@ api = Blanket::wrap("http://api.example.org", headers: {token: 'my secret token'
 api.users(55).get(headers: {foo: 'bar'})
 ```
 
+### Basic Auth
+If your API requires a Basic Auth authentication, Blanket will accept the
+credentials either globally or on a per-request basis:
+
+```ruby
+# All requests will include the provided credentials
+api = Blanket::wrap("http://api.example.org", basic_auth: {username: 'foo', password: 'bar'})
+
+# This single request include the provided credentials
+api.users(55).get(basic_auth: {username: 'foo', password: 'bar'})
+```
+
 ### Extensions
 Some APIs require you to append an extension to your requests, such as `.json` or `.xml`. Blanket supports this use case, letting you define an extension for all your requests or override it for a single one:
 

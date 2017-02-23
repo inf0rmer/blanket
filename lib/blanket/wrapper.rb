@@ -33,6 +33,9 @@ module Blanket
     # should be appended to all requests
     attr_accessor :extension
 
+    # Attribute accessor for HTTP Basic Auth credentials
+    attr_accessor :basic_auth
+
     add_action :get
     add_action :post
     add_action :put
@@ -49,6 +52,7 @@ module Blanket
       @headers = options[:headers] || {}
       @params = options[:params] || {}
       @extension = options[:extension]
+      @basic_auth = options[:basic_auth]
     end
 
     private
@@ -57,7 +61,8 @@ module Blanket
       Wrapper.new uri_from_parts([method, args.first]), {
         headers: @headers,
         extension: @extension,
-        params: @params
+        params: @params,
+        basic_auth: @basic_auth
       }
     end
 
@@ -67,7 +72,8 @@ module Blanket
           uri_from_parts([:method_name, argument]),
           headers: @headers,
           extension: @extension,
-          params: @params
+          params: @params,
+          basic_auth: @basic_auth
         )
       end
     end
@@ -80,6 +86,7 @@ module Blanket
 
       headers = Blanket.stringify_keys merged_headers(options[:headers])
       params = merged_params(options[:params])
+      basic_auth = options[:basic_auth] || @basic_auth
       uri = uri_from_parts([id])
 
       if @extension
@@ -87,9 +94,10 @@ module Blanket
       end
 
       response = HTTParty.public_send(method, uri, {
-        query:   params,
-        headers: headers,
-        body:    options[:body]
+        query:      params,
+        headers:    headers,
+        body:       options[:body],
+        basic_auth: basic_auth
       }.reject { |_, value| value.nil? || value.empty? })
 
       if response.code < 400
