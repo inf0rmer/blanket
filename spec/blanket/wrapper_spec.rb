@@ -33,6 +33,20 @@ describe "Blanket::Wrapper" do
         with("http://api.example.org/flexible/send", anything)
     end
 
+    describe "subclassing" do
+      let :wrapper do
+        Class.new(Blanket::Wrapper)
+      end
+
+      let :api do
+        wrapper.new("http://api.example.org")
+      end
+
+      it "maintains the same Blanket::Wrapper subclass for nested resources" do
+        expect(api.users).to be_a(wrapper)
+      end
+    end
+
     describe "Response" do
       before :each do
         stub_request(:get, "http://api.example.org/users")

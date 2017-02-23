@@ -54,7 +54,7 @@ module Blanket
     private
 
     def method_missing(method, *args, &block)
-      Wrapper.new uri_from_parts([method, args.first]), {
+      self.class.new uri_from_parts([method, args.first]), {
         headers: @headers,
         extension: @extension,
         params: @params
@@ -63,7 +63,7 @@ module Blanket
 
     method_overrides.each do |method_name|
       define_method(method_name) do |argument|
-        Wrapper.new(
+        self.class.new(
           uri_from_parts([:method_name, argument]),
           headers: @headers,
           extension: @extension,
