@@ -33,8 +33,8 @@ module Blanket
     # should be appended to all requests
     attr_accessor :extension
 
-    # Attribute accessor for HTTP Basic Auth credentials
-    attr_accessor :basic_auth
+    # Attribute accessor for HTTParty options
+    attr_accessor :http_options
 
     add_action :get
     add_action :post
@@ -52,7 +52,7 @@ module Blanket
       @headers = options[:headers] || {}
       @params = options[:params] || {}
       @extension = options[:extension]
-      @basic_auth = options[:basic_auth]
+      @http_options = options[:http_options] || {}
     end
 
     private
@@ -62,7 +62,7 @@ module Blanket
         headers: @headers,
         extension: @extension,
         params: @params,
-        basic_auth: @basic_auth
+        http_options: @http_options
       }
     end
 
@@ -73,7 +73,7 @@ module Blanket
           headers: @headers,
           extension: @extension,
           params: @params,
-          basic_auth: @basic_auth
+          http_options: @http_options
         )
       end
     end
@@ -86,7 +86,7 @@ module Blanket
 
       headers = Blanket.stringify_keys merged_headers(options[:headers])
       params = merged_params(options[:params])
-      basic_auth = options[:basic_auth] || @basic_auth
+      http_options = options[:http_options] || @http_options
       uri = uri_from_parts([id])
 
       if @extension
@@ -96,9 +96,8 @@ module Blanket
       response = HTTParty.public_send(method, uri, {
         query:      params,
         headers:    headers,
-        body:       options[:body],
-        basic_auth: basic_auth
-      }.reject { |_, value| value.nil? || value.empty? })
+        body:       options[:body]
+      }.reject { |_, value| value.nil? || value.empty? }.merge(http_options))
 
       if response.code < 400
         body = (response.respond_to? :body) ? response.body : nil
