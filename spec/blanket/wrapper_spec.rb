@@ -150,6 +150,27 @@ describe "Blanket::Wrapper" do
       end
     end
 
+    describe 'Basic Auth' do
+      let(:basic_auth) { {username: 'foo', password: 'bar'} }
+
+      before :each do
+        allow(HTTParty).to receive(:get) { StubbedResponse.new }
+      end
+
+      it 'allows sending parameters in a request' do
+        api.users(55).get(basic_auth: basic_auth)
+
+        expect(HTTParty).to have_received(:get).with('http://api.example.org/users/55', basic_auth: basic_auth)
+      end
+
+      it 'allows setting parameters globally' do
+        api = Blanket::wrap("http://api.example.org", basic_auth: basic_auth)
+        api.users(55).get
+
+        expect(HTTParty).to have_received(:get).with('http://api.example.org/users/55', basic_auth: basic_auth)
+      end
+    end
+
     describe 'URL Extension' do
       before :each do
         allow(HTTParty).to receive(:get) { StubbedResponse.new }

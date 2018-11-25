@@ -33,6 +33,9 @@ module Blanket
     # should be appended to all requests
     attr_accessor :extension
 
+    # Attribute accessor for HTTParty options
+    attr_accessor :http_options
+
     add_action :get
     add_action :post
     add_action :put
@@ -49,6 +52,7 @@ module Blanket
       @headers = options[:headers] || {}
       @params = options[:params] || {}
       @extension = options[:extension]
+      @http_options = options[:http_options] || {}
     end
 
     private
@@ -57,7 +61,8 @@ module Blanket
       Wrapper.new uri_from_parts([method, args.first]), {
         headers: @headers,
         extension: @extension,
-        params: @params
+        params: @params,
+        http_options: @http_options
       }
     end
 
@@ -67,7 +72,8 @@ module Blanket
           uri_from_parts([:method_name, argument]),
           headers: @headers,
           extension: @extension,
-          params: @params
+          params: @params,
+          http_options: @http_options
         )
       end
     end
@@ -80,6 +86,7 @@ module Blanket
 
       headers = Blanket.stringify_keys merged_headers(options[:headers])
       params = merged_params(options[:params])
+      http_options = options[:http_options] || @http_options
       uri = uri_from_parts([id])
 
       if @extension
@@ -87,10 +94,10 @@ module Blanket
       end
 
       response = HTTParty.public_send(method, uri, {
-        query:   params,
-        headers: headers,
-        body:    options[:body]
-      }.reject { |_, value| value.nil? || value.empty? })
+        query:      params,
+        headers:    headers,
+        body:       options[:body]
+      }.reject { |_, value| value.nil? || value.empty? }.merge(http_options))
 
       if response.code < 400
         body = (response.respond_to? :body) ? response.body : nil
