@@ -3,6 +3,7 @@
 [![Coverage Status](https://img.shields.io/coveralls/inf0rmer/blanket.svg)](https://coveralls.io/r/inf0rmer/blanket?branch=master)
 [![Code Climate](https://codeclimate.com/github/inf0rmer/blanket/badges/gpa.svg)](https://codeclimate.com/github/inf0rmer/blanket)
 [![Inline docs](http://inch-ci.org/github/inf0rmer/blanket.svg?branch=master)](http://inch-ci.org/github/inf0rmer/blanket)
+[![Reviewed by Hound](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com)
 
 
 A dead simple API wrapper.
