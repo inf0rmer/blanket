@@ -33,6 +33,10 @@ module Blanket
     # should be appended to all requests
     attr_accessor :extension
 
+    # Attribute accessor for timeout setting that
+    # should be applied to all requests
+    attr_accessor :timeout
+
     add_action :get
     add_action :post
     add_action :put
@@ -49,6 +53,7 @@ module Blanket
       @headers = options[:headers] || {}
       @params = options[:params] || {}
       @extension = options[:extension]
+      @extension = options[:timeout]
     end
 
     private
@@ -57,6 +62,7 @@ module Blanket
       Wrapper.new uri_from_parts([method, args.first]), {
         headers: @headers,
         extension: @extension,
+        timeout: @timeout,
         params: @params
       }
     end
@@ -67,6 +73,7 @@ module Blanket
           uri_from_parts([:method_name, argument]),
           headers: @headers,
           extension: @extension,
+          timeout: @timeout,
           params: @params
         )
       end
@@ -87,10 +94,11 @@ module Blanket
       end
 
       response = HTTParty.public_send(method, uri, {
+        timeout: options[:timeout] || timeout,
         query:   params,
         headers: headers,
         body:    options[:body]
-      }.reject { |_, value| value.nil? || value.empty? })
+      }.reject { |_, value| value.nil? || (value.respond_to?(:empty) && value.empty?) })
 
       if response.code < 400
         body = (response.respond_to? :body) ? response.body : nil
