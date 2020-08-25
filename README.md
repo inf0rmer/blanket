@@ -171,6 +171,28 @@ users_endpoint = api.users(55)
 users_endpoint.extension = :xml
 ```
 
+### Timeouts
+Some applications may require setting a timeout for your requests to ensure the request finishes within a given time
+or else an error will be raised. Simply pass your desired timeout to the .wrap options
+
+```ruby
+# All requests will raise an exception if they last longer than 15s
+api = Blanket.wrap("http://api.example.org", timeout: 15)
+
+begin
+  api.users(55).get
+rescue Timeout::Error => e
+  puts "Getting user 55 took too long!"
+end
+
+# An endpoint being built can override the timeout
+users_endpoint = api.user
+users_endpoint.timeout = 30
+
+# Individual request actions can override the timeout
+users_endpoint.get(55, timeout: 10)
+```
+
 ### Handling Exceptions
 
 Blanket will raise exceptions for HTTP errors encountered while making requests. Exception subclasses are raised for well known errors (404, 500, etc.) but for other status codes a default `Blanket::Exception` will be raised instead.
