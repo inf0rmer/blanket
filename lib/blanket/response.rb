@@ -27,5 +27,10 @@ module Blanket
     def payload
       @payload ||= JSON.parse(payload_json, object_class: OpenStruct)
     end
+
+    def to_s
+      @payload_json
+    end
+    alias inspect to_s
   end
 end
